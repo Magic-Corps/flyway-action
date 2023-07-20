@@ -1,0 +1,34 @@
+name: Flyway Database Migration
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-docker@v1
+
+      - name: Pull Flyway Docker image
+        run: docker pull flyway/flyway:latest
+
+      - name: Set up database configuration
+        run: |
+          echo "flyway.url=jdbc:snowflake://jdtksou-oz97439.snowflakecomputing.com/?db=MYTESTDB&schema=public" > flyway.conf
+          # Add any additional Flyway configuration options as needed
+
+      - name: Run Flyway migration
+        run: |
+          docker run --rm \
+            -v $(pwd):/flyway/sql \
+            -v $(pwd)/flyway.conf:/flyway/conf/flyway.conf \
+            flyway/flyway:latest \
+            -configFiles=/flyway/conf/flyway.conf \
+            migrate
