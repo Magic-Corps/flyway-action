@@ -4,20 +4,18 @@ on:
   workflow_dispatch:  # Trigger the workflow manually
 
 jobs:
-  job1:
-    runs-on: ubuntu-latest
+  my_job:
     outputs:
-      myVariable: ${{ steps.setVariable.outputs.myVariable }}
+      # Map the step outputs to job outputs
+      my_var: ${{steps.my_step.outputs.my_var}}
     steps:
-      - name: Set variable
-        id: setVariable
-        run: echo "::set-output name=myVariable::Hello from Job 1"
-
-  job2:
-    needs: job1
-    runs-on: ubuntu-latest
-    steps:
-      - name: Use variable from Job 1
+      - name: "Example output creation"
+        id: "my_step"
         run: |
-          myValue=${{ needs.job1.outputs.myVariable }}
-          echo "Variable from Job 1: $myValue"
+          my_var="Hello World"
+          echo "Output [$my_var]"
+          echo "my_var=$my_var" >> $GITHUB_OUTPUT          
+  my_second_job:
+    needs: my_job
+    steps:
+      - run: echo my_var [${{needs.my_job.outputs.my_var}}]
