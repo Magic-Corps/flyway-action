@@ -1,0 +1,23 @@
+name: Share Variables Between Jobs
+
+on:
+  workflow_dispatch:  # Trigger the workflow manually
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      myVariable: ${{ steps.setVariable.outputs.myVariable }}
+    steps:
+      - name: Set variable
+        id: setVariable
+        run: echo "::set-output name=myVariable::Hello from Job 1"
+
+  job2:
+    needs: job1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use variable from Job 1
+        run: |
+          myValue=${{ needs.job1.outputs.myVariable }}
+          echo "Variable from Job 1: $myValue"
