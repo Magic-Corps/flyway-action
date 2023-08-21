@@ -19,3 +19,4 @@ jobs:
     needs: my_job
     steps:
       - run: echo my_var [${{needs.my_job.outputs.my_var}}]
+ 
