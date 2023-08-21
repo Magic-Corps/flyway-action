@@ -21,6 +21,6 @@ jobs:
     needs: my_job
     steps:
       - run: |
-         myValue=${{ needs.my_job.outputs.my_var }}
-         echo "Variable from Job 1: $myValue"
+          myValue=${{ needs.my_job.outputs.my_var }}
+          echo "Variable from Job 1: $myValue"
  
